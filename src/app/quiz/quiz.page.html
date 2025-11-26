@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Quiz</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="ion-padding">
+
+    <ion-text color="medium" *ngIf="!quizFinished">
+      <p>Pergunta {{ currentQuestionIndex + 1 }} de {{ QUIZ_QUESTIONS.length }} | Pontuação: {{ score }}</p>
+    </ion-text>
+    <ion-progress-bar [value]="(currentQuestionIndex) / QUIZ_QUESTIONS.length" *ngIf="!quizFinished"></ion-progress-bar>
+    <ion-item-divider *ngIf="!quizFinished"></ion-item-divider>
+
+    <div *ngIf="quizFinished" class="ion-text-center ion-margin-top">
+      <h2>🎉 Quiz Concluído!</h2>
+      <p>Sua pontuação final foi de **{{ score }} / {{ QUIZ_QUESTIONS.length }}**.</p>
+      
+      <ion-button (click)="restartQuiz()" expand="block" color="success" class="ion-margin-top">
+        Reiniciar Quiz
+      </ion-button>
+    </div>
+
+    <div *ngIf="!quizFinished">
+      <h3 class="ion-margin-top">{{ currentQuestion.question }}</h3>
+
+      <ion-list>
+        <ion-item *ngFor="let option of currentQuestion.answerOptions; let i = index" lines="none">
+          <ion-button 
+            expand="block" 
+            size="large"
+            (click)="answerQuestion(i)" 
+            [disabled]="answered" 
+            [color]="answered && currentQuestion.answerOptions[i].isCorrect ? 'success' : (answered && !currentQuestion.answerOptions[i].isCorrect ? 'danger' : 'primary')"
+            class="quiz-option-button"
+            >
+            {{ option.text }}
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-card *ngIf="feedbackMessage" class="ion-margin-top">
+        <ion-card-header>
+          <ion-card-subtitle>Feedback</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p [innerHTML]="feedbackMessage"></p>
+          <ion-button (click)="nextQuestion()" expand="block" color="secondary" class="ion-margin-top">
+            {{ currentQuestionIndex < QUIZ_QUESTIONS.length - 1 ? 'Próxima Pergunta' : 'Ver Resultado' }}
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-text color="medium" class="ion-padding-top">
+        <p *ngIf="!answered">Dica: {{ currentQuestion.hint }}</p>
+      </ion-text>
+    </div>
+  </div>
+</ion-content>
