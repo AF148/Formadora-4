@@ -1,0 +1,7 @@
+{
+  "name": "AcessoLivre",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
